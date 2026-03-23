@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZED System - Trang Chủ</title>
+    <title>ZED System - Get Key</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background: #0f172a; }
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .btn-glow { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); transition: 0.3s; }
+        .btn-glow { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
         .btn-glow:hover { box-shadow: 0 0 35px rgba(59, 130, 246, 0.6); transform: translateY(-2px); }
     </style>
 </head>
@@ -20,24 +20,19 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
         </div>
-        <h1 class="text-3xl font-black mb-2 italic tracking-tighter">ZED SYSTEM</h1>
-        <p class="text-slate-400 text-sm mb-10 leading-relaxed">Nhấn nút bên dưới để vượt link và nhận mã truy cập cá nhân của bạn.</p>
+        <h1 class="text-3xl font-black mb-2 italic tracking-tighter italic">ZED SYSTEM</h1>
+        <p class="text-slate-400 text-sm mb-10 leading-relaxed">Vui lòng hoàn thành nhiệm vụ để nhận mã Key truy cập.</p>
 
         <button onclick="startGet()" class="btn-glow w-full bg-blue-600 py-4 rounded-2xl font-black uppercase tracking-widest active:scale-95 transition-all">
             LẤY KEY NGAY
         </button>
-        <p class="mt-8 text-[10px] text-slate-600 uppercase tracking-[0.3em]">Secure Verification</p>
+        <p class="mt-8 text-[10px] text-slate-600 uppercase tracking-[0.3em]">Powered by ZED Cloud</p>
     </div>
 
     <script>
         function startGet() {
-            // ĐƯỜNG DẪN TRANG 2 (Phải có đuôi .html)
-            const destination = window.location.origin + "/view-key.html";
-            // API LINK4M CỦA BẠN
-            const apiLink4M = "https://link4m.co/st?api=67de0860d2f8a229cb25f955&url=";
-            
-            // Chuyển hướng sang Link4M
-            window.location.href = apiLink4M + encodeURIComponent(destination);
+            // THAY LINK RÚT GỌN LINK4M CỦA BẠN VÀO ĐÂY
+            window.location.href = "https://link4m.com/TGLvwQSq"; 
         }
     </script>
 </body>
