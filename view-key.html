@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZED System - Nhận Key</title>
+    <title>ZED System - Key Success</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background: #020617; font-family: 'Inter', sans-serif; color: white; }
@@ -17,22 +17,22 @@
         
         <div id="status-box" class="text-center py-6">
             <div class="inline-block animate-spin w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full mb-4"></div>
-            <p id="status-text" class="text-slate-400">Đang khởi tạo mã Key của bạn...</p>
+            <p id="status-text" class="text-slate-400 font-medium">Đang kiểm tra thiết bị và tạo mã...</p>
         </div>
 
-        <div id="key-content" class="hidden">
-            <h2 class="text-center text-emerald-400 font-bold text-sm mb-6 flex items-center justify-center gap-2 uppercase">
+        <div id="key-content" class="hidden animate-in fade-in zoom-in duration-500">
+            <h2 class="text-center text-emerald-400 font-bold text-sm mb-6 flex items-center justify-center gap-2 uppercase tracking-tighter">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                 Xác thực thành công
             </h2>
 
-            <div class="key-card rounded-3xl p-8 mb-6 text-center">
-                <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-4">Mã truy cập cá nhân</p>
+            <div class="key-card rounded-3xl p-8 mb-6 text-center shadow-inner">
+                <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] mb-4 font-semibold">Mã truy cập duy nhất</p>
                 <div id="final-key" class="text-3xl font-black tracking-tighter shimmer-text italic">----</div>
             </div>
 
             <div class="bg-blue-500/5 border border-blue-500/10 rounded-2xl p-4 mb-8 text-center">
-                <p id="note-text" class="text-[11px] text-slate-500 italic"></p>
+                <p id="note-text" class="text-[11px] text-slate-500 leading-relaxed italic"></p>
             </div>
 
             <button onclick="copyKey()" id="copy-btn" class="w-full bg-white text-slate-950 py-4 rounded-2xl font-black hover:bg-blue-50 transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95">
@@ -42,6 +42,7 @@
     </div>
 
     <script>
+        // Tạo chuỗi ngẫu nhiên
         function generateRandom(len) {
             const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
             let res = "";
@@ -50,21 +51,33 @@
         }
 
         window.onload = async function() {
-            // TỰ ĐỘNG HIỆN KEY LUÔN (Bỏ qua check token để fix lỗi Link4M không trả token)
             try {
+                // 1. Lấy dữ liệu IP (Ẩn)
+                let ipPart = generateRandom(4);
+                try {
+                    const ipRes = await fetch('https://api64.ipify.org?format=json');
+                    const ipData = await ipRes.json();
+                    // Lấy một phần IP để tạo tính duy nhất cho Key
+                    ipPart = ipData.ip.split('.').pop().split(':').pop().slice(-4).toUpperCase();
+                } catch(e) { console.log("Dùng mã ngẫu nhiên thay thế IP"); }
+
+                // 2. Tải data.json
                 const res = await fetch('data.json');
                 const siteData = await res.json();
                 
+                // 3. Hiển thị sau 2 giây
                 setTimeout(() => {
-                    const myKey = siteData.config.key_prefix + generateRandom(4) + "-" + generateRandom(4) + siteData.config.key_suffix;
+                    // Key trộn giữa Random + Một phần IP ẩn
+                    const myKey = siteData.config.key_prefix + generateRandom(4) + "-" + ipPart + siteData.config.key_suffix;
                     
                     document.getElementById('status-box').classList.add('hidden');
                     document.getElementById('key-content').classList.remove('hidden');
                     document.getElementById('final-key').innerText = myKey;
                     document.getElementById('note-text').innerText = siteData.config.note;
-                }, 2000); // Đợi 2 giây cho chuyên nghiệp
+                }, 2000);
+
             } catch (err) {
-                document.getElementById('status-text').innerText = "Lỗi: Không đọc được data.json";
+                document.getElementById('status-text').innerText = "Lỗi hệ thống! Vui lòng tải lại trang.";
             }
         };
 
@@ -72,13 +85,14 @@
             const k = document.getElementById('final-key').innerText;
             navigator.clipboard.writeText(k);
             const b = document.getElementById('copy-btn');
+            const oldTxt = b.innerText;
             b.innerText = "ĐÃ SAO CHÉP!";
-            b.classList.replace('bg-white', 'bg-emerald-500');
-            b.classList.add('text-white');
+            b.style.background = "#10b981";
+            b.style.color = "#ffffff";
             setTimeout(() => {
-                b.innerText = "SAO CHÉP MÃ KEY";
-                b.classList.replace('bg-emerald-500', 'bg-white');
-                b.classList.remove('text-white');
+                b.innerText = oldTxt;
+                b.style.background = "#ffffff";
+                b.style.color = "#020617";
             }, 2000);
         }
     </script>
